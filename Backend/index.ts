@@ -17,7 +17,7 @@ app.use(cors({
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use('/api/v1/product', productRouter)
+app.use('/api/v1/products', productRouter)
 
 async function startServer(){
     try{

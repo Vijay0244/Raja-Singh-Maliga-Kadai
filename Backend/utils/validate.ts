@@ -1,23 +1,21 @@
-export const validate = (name: string, category: string, unit: string, costPrice: number, sellingPrice: number, quantity: number, lang: string) => {
-    const errorMsg = (enMsg: string, taMsg: string) =>lang === 'ta' ? taMsg : enMsg
-
+export const validate = (name: string, category: string, unit: string, costPrice: number, sellingPrice: number, quantity: number) => {
     if(!name){
-        return {success: false, error: errorMsg("Name is required", "பெயர் தேவை")}
+        return {success: false, error: "பெயர் தேவை"}
     }
     if(!category){
-        return {success: false, error: errorMsg("Category is required", "வகை தேவை")}
+        return {success: false, error: "வகை தேவை"}
     }
     if(!unit){
-        return {success: false, error: errorMsg("Unit is required", "அலகு தேவை")}
+        return {success: false, error: "அலகு தேவை"}
     }
-    if(!costPrice){
-        return {success: false, error: errorMsg("Cost Price is required", "செலவுக் விலை தேவை")}
+    if(costPrice <= 0){
+        return {success: false, error: "வாங்கிய விலை 0 க்கும் மேல் இருக்க வேண்டும்"}
     }
-    if(!sellingPrice){
-        return {success: false, error: errorMsg("Selling Price is required", "விற்பனை விலை தேவை")}
+    if(sellingPrice <= 0){
+        return {success: false, error: "விற்கும் விலை 0 க்கும் மேல் இருக்க வேண்டும்"}
     }
-    if(!quantity){
-        return {success: false, error: errorMsg("Quantity is required", "அளவு தேவை")}
+    if(quantity <= 0){
+        return {success: false, error: "அளவு 0 க்கும் மேல் இருக்க வேண்டும்"}
     }
 
     return {success: true}
