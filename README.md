@@ -71,8 +71,15 @@ Make sure MongoDB is running on your system. The application will connect to `mo
 Create a `.env` file in the Backend directory (optional - uses default values):
 
 ```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/maliga-kadai
+PORT=
+MONGODB_URI=
+FRONTEND_URL=
+```
+
+Create a `.env` file in the Frontend directory:
+
+```env
+VITE_BACKEND_URL=
 ```
 
 ### 5. Run the Application
