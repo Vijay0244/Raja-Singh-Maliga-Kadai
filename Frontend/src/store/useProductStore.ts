@@ -32,12 +32,15 @@ export const useProductStore = create<IProductStore>((set, get) => ({
         const { filters, allProducts } = get()
         const updatedFilters = { ...filters, ...newFilters }
         
-        // Apply filters to all products
+        // Only apply filtering if we have products
         if (allProducts.length > 0) {
-            const filteredProducts = tempFilterProducts(allProducts, updatedFilters)
-            set({ 
-                filters: updatedFilters,
-                products: filteredProducts
+            // Use requestAnimationFrame for smoother UI updates
+            requestAnimationFrame(() => {
+                const filteredProducts = tempFilterProducts(allProducts, updatedFilters)
+                set({ 
+                    filters: updatedFilters,
+                    products: filteredProducts
+                })
             })
         } else {
             set({ filters: updatedFilters })
@@ -49,7 +52,7 @@ export const useProductStore = create<IProductStore>((set, get) => ({
         try{
             const response = await Axios.get('/products/get/all')
             if(response.data.success){
-                const fetchedProducts = response.data.products.reverse();
+                const fetchedProducts = response.data.products.reverse()
                 
                 // Store all products and apply current filters
                 const { filters } = get()
@@ -69,7 +72,7 @@ export const useProductStore = create<IProductStore>((set, get) => ({
             set({ isFetchingAllProducts: false })
         }
     },
-    
+
     fetchProductById: async(id: string) =>{
         set({ isFetchingEachProduct: true })
         const { setError } = get()
@@ -94,11 +97,13 @@ export const useProductStore = create<IProductStore>((set, get) => ({
         try{
             const response = await Axios.post("/products/add", {name: product.name, category: product.category, unit: product.unit, costPrice: product.costPrice, sellingPrice: product.sellingPrice, quantity: product.quantity})
             if(response.data.success){
-                let tempProducts = [...products, response.data.newProduct]
-                let tempAllProducts = [...allProducts, response.data.newProduct]
+                const newProduct = response.data.newProduct
+                const updatedProducts = [newProduct, ...products]
+                const updatedAllProducts = [newProduct, ...allProducts]
+                
                 set({ 
-                    products: tempProducts.reverse(),
-                    allProducts: tempAllProducts.reverse()
+                    products: updatedProducts,
+                    allProducts: updatedAllProducts
                 })
             } 
         } 
@@ -117,11 +122,17 @@ export const useProductStore = create<IProductStore>((set, get) => ({
         try{
             const response = await Axios.put(`/products/edit/${id}`, {name: product.name, category: product.category, unit: product.unit, costPrice: product.costPrice, sellingPrice: product.sellingPrice, quantity: product.quantity})
             if(response.data.success){
-                let tempProducts = products.map((element: IProduct) =>element._id === id ? response.data.updatedProduct : element)
-                let tempAllProducts = allProducts.map((element: IProduct) =>element._id === id ? response.data.updatedProduct : element)
+                const updatedProduct = response.data.updatedProduct
+                const updatedProducts = products.map((element: IProduct) => 
+                    element._id === id ? updatedProduct : element
+                )
+                const updatedAllProducts = allProducts.map((element: IProduct) => 
+                    element._id === id ? updatedProduct : element
+                )
+                
                 set({ 
-                    products: tempProducts,
-                    allProducts: tempAllProducts
+                    products: updatedProducts,
+                    allProducts: updatedAllProducts
                 })
             }
         } 
@@ -140,11 +151,12 @@ export const useProductStore = create<IProductStore>((set, get) => ({
         try {
             const response = await Axios.delete(`/products/delete/${id}`)
             if(response.data.success){
-                const tempProducts = products.filter((product: IProduct) => product._id !== id)
-                const tempAllProducts = allProducts.filter((product: IProduct) => product._id !== id)
+                const updatedProducts = products.filter((product: IProduct) => product._id !== id);
+                const updatedAllProducts = allProducts.filter((product: IProduct) => product._id !== id);
+                
                 set({ 
-                    products: tempProducts,
-                    allProducts: tempAllProducts
+                    products: updatedProducts,
+                    allProducts: updatedAllProducts
                 })
             }
         } 

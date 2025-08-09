@@ -130,3 +130,24 @@ export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
     error?: string;
     options: SelectOption[];
 }
+
+
+export interface ProductGridProps {
+    products: IProduct[];
+    onHistoryClick: (product: IProduct) => void;
+}
+
+export interface SearchBarProps {
+    searchValue: string;
+    onSearchChange: (value: string) => void;
+    isSearching?: boolean;
+}
+
+export interface FilterPanelProps {
+    showFilters: boolean;
+    onToggleFilters: () => void;
+}
+
+export interface EmptyStateProps {
+    onAddProduct: () => void;
+}

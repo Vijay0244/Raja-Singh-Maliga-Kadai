@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Clock } from "lucide-react";
 import type { ProductCardProps } from "../types";
 import { formatDate } from "../utils/dateUtils";
 import { useNavigate } from "react-router-dom";
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-
+export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) => {
+  
   const navigate = useNavigate()
 
+  const handleClick = useCallback(() =>{
+    navigate(`/products/${product._id}`)
+  }, [navigate, product._id])
+
   return (
-    <div onClick={() => navigate(`/products/${product._id}`)} className="hover:shadow-lg bg-white rounded-lg shadow-md p-6 transition-shadow cursor-pointer">
+    <div onClick={handleClick} className="hover:shadow-lg bg-white rounded-lg shadow-md p-6 transition-shadow cursor-pointer">
       <div className="flex justify-between items-start mb-5">
-        <h3 className="text-lg font-semibold text-gray-900 truncate">
-          {product.name}
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900 truncate">{product.name}</h3>
       </div>
 
       <div className="space-y-2 text-sm">
@@ -54,4 +56,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
     </div>
   );
-};
+});
+
+ProductCard.displayName = 'ProductCard';
