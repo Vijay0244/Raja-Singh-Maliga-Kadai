@@ -7,7 +7,7 @@ export const EmptyState: React.FC<EmptyStateProps> = React.memo(({ onAddProduct 
   
   const handleAddProduct = useCallback(() =>{
     onAddProduct()
-  }, [onAddProduct])
+  }, [])
 
   return (
     <div className="text-center py-12">

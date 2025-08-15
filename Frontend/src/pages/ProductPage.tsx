@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useProductStore } from '../store/useProductStore';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
-import { formatCurrency, formatDateTime, formatDate } from '../utils/dateUtils';
+import { formatCurrency, formatDateTime } from '../utils/dateUtils';
 import toast from 'react-hot-toast';
 import { DeleteConfirmModal } from '../components/DeleteConfirmModal';
 import Loading from '../components/Loading';
@@ -119,11 +119,12 @@ const ProductPage: React.FC = () => {
 
             <Card>
                 <div className="space-y-4">
-                    <h3 className="text-lg font-semibold border-b pb-2">நேர முத்திரைகள்</h3>
+                    <h3 className="text-lg font-semibold border-b pb-2">தேதி மற்றும் நேரம் தகவல்
+</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label className="text-sm font-medium text-gray-600">சேர்க்கப்பட்ட தேதி</label>
-                            <p className="text-lg">{product.date ? formatDate(product.date) : 'N/A'}</p>
+                            <p className="text-lg">{product.date ? formatDateTime(product.date) : 'N/A'}</p>
                         </div>
                         {product.createdAt && (
                             <div>
@@ -149,7 +150,7 @@ const ProductPage: React.FC = () => {
                             விலை வரலாறு ({product.priceHistory.length} entries)
                         </h3>
                         <div className="space-y-3">
-                            {product.priceHistory.slice(0, 5).map((entry, index) => {
+                            {product.priceHistory.reverse().map((entry, index) => {
                                 const entryCostPrice = typeof entry.costPrice === 'object' ? parseFloat(entry.costPrice.$numberDecimal) : entry.costPrice
                                 const entrySellingPrice = typeof entry.sellingPrice === 'object' ? parseFloat(entry.sellingPrice.$numberDecimal) : entry.sellingPrice
                                 const entryProfit = entrySellingPrice - entryCostPrice

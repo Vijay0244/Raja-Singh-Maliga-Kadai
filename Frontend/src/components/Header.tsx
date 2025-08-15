@@ -12,7 +12,7 @@ const Header: React.FC = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     <div className="flex items-center">
-                        <Link to="/" className="text-2xl font-bold text-gray-900">பொருள் சேர்க்க</Link>
+                        <Link to="/" className="text-2xl font-bold text-gray-900">ராஜா சிங் ஸ்டோர்ஸ்</Link>
                     </div>
                     <Button icon={Plus} onClick={() => navigate("/add-product")} className="bg-green-600 hover:bg-green-700"><span className='hidden sm:block'>பொருள் சேர்க்க</span></Button>
                 </div>

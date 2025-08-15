@@ -1,7 +1,7 @@
 import React from 'react';
 import type { IPriceHistory, PriceHistoryModalProps } from '../types';
 import { Modal } from './Modal';
-import { formatDate } from '../utils/dateUtils';
+import { formatDateTime } from '../utils/dateUtils';
 
 
 export const PriceHistoryModal: React.FC<PriceHistoryModalProps> = ({ isOpen, product, onClose }) => {
@@ -24,7 +24,7 @@ export const PriceHistoryModal: React.FC<PriceHistoryModalProps> = ({ isOpen, pr
                     <span className="text-gray-600">விற்கும் விலை:</span>
                     <span className="ml-2 font-medium text-blue-600">{history.sellingPrice.$numberDecimal}</span>
                   </div>
-                  <div className="col-span-2 text-xs text-gray-500 mt-1">{formatDate(history.date)}</div>
+                  <div className="col-span-2 text-xs text-gray-500 mt-1">{formatDateTime(history.date)}</div>
                 </div>
               </div>
             ))}

@@ -34,7 +34,7 @@ export const HomePage: React.FC = () => {
         // Reset searching state after a short delay
         setTimeout(() => setIsSearching(false), 100)
       }
-    }, [debouncedSearchValue, setFilters, filters.search])
+    }, [debouncedSearchValue, filters.search])
 
     const handleSearchChange = useCallback((value: string) =>{
       setSearchValue(value)
@@ -54,7 +54,7 @@ export const HomePage: React.FC = () => {
 
     const handleAddProduct = useCallback(() =>{
       navigate("/add-product")
-    }, [navigate])
+    }, [])
 
     if(isFetchingAllProducts){
       return <Loading />

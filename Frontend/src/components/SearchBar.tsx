@@ -7,7 +7,7 @@ export const SearchBar: React.FC<SearchBarProps> = React.memo(({ searchValue, on
   
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) =>{
     onSearchChange(e.target.value)
-  }, [onSearchChange])
+  }, [])
 
   return (
     <div className="flex-1">

@@ -13,7 +13,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = React.memo(({ showFilters
   
   const handleFilterChange = useCallback((newFilters: Partial<typeof filters>) =>{
     setFilters(newFilters)
-  }, [setFilters])
+  }, [])
 
   const categoryOptions = useMemo(() => [
     {

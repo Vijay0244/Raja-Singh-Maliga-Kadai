@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Clock } from "lucide-react";
 import type { ProductCardProps } from "../types";
-import { formatDate } from "../utils/dateUtils";
+import { formatDateTime } from "../utils/dateUtils";
 import { useNavigate } from "react-router-dom";
 
 export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) => {
@@ -10,7 +10,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
 
   const handleClick = useCallback(() =>{
     navigate(`/products/${product._id}`)
-  }, [navigate, product._id])
+  }, [product._id])
 
   return (
     <div onClick={handleClick} className="hover:shadow-lg bg-white rounded-lg shadow-md p-6 transition-shadow cursor-pointer">
@@ -50,7 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
             கடைசி மாற்றிய தேதி:
           </span>
           <span className="text-sm text-gray-500">
-            {formatDate(product.updatedAt!)}
+            {formatDateTime(product.updatedAt!)}
           </span>
         </div>
       </div>

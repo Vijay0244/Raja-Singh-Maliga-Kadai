@@ -3,12 +3,11 @@ import { History } from "lucide-react";
 import type { IProduct, ProductGridProps } from "../types";
 import { ProductCard } from "./ProductCard";
 
-
 export const ProductGrid: React.FC<ProductGridProps> = React.memo(({ products, onHistoryClick }) => {
 
   const handleHistoryClick = useCallback((product: IProduct) =>{
     onHistoryClick(product)
-  }, [onHistoryClick])
+  }, [])
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
