@@ -1,4 +1,4 @@
-export const validate = (name: string, category: string, unit: string, costPrice: number, sellingPrice: number, quantity: number) => {
+export const validate: (name: string, category: string, unit: string, costPrice: number, sellingPrice: number, quantity: number) => { success: boolean, error: string } = (name, category, unit, costPrice, sellingPrice, quantity) => {
     if(!name){
         return {success: false, error: "பெயர் தேவை"}
     }
@@ -18,5 +18,5 @@ export const validate = (name: string, category: string, unit: string, costPrice
         return {success: false, error: "அளவு 0 க்கும் மேல் இருக்க வேண்டும்"}
     }
 
-    return {success: true}
+    return {success: true, error: ""}
 }

@@ -6,21 +6,14 @@ export interface IPriceEntry{
     date: Date;
 }
 
-export interface ITranslation{
-    name: string;
-    unit: 'g' | 'kg' | 'l' | 'ml' | 'கிராம்' | 'கிலோ' | 'லிட்டர்' | 'மில்லிலிட்டர்';
-    category: string;
-}
-
 export interface IProduct{
+    name: string;
+    unit: 'கிராம்' | 'கிலோ' | 'லிட்டர்' | 'மில்லிலிட்டர்';
+    category: string;
     costPrice: Types.Decimal128;
     sellingPrice: Types.Decimal128;
     date: Date;
     quantity: number;
-    translation: {
-        en: ITranslation;
-        ta: ITranslation;
-    };
     priceHistory: IPriceEntry[];
     createdAt?: Date;
     updatedAt?: Date;

@@ -1,54 +1,25 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import { getTranslations } from "../utils/translate";
 import ProductModel from "../models/ProductModel";
 import { validate } from "../utils/validate";
-import { IProductDocument } from "../types/indes";
-import { enToTaUnitMap, taToEnUnitMap } from "../constants/unitMapping";
+import { IProductDocument } from "../types/index";
 
 export const addProductController = async(req: Request, res: Response) =>{
     try{
-        const { name, category, unit, costPrice, sellingPrice, quantity, lang } = req.body
+        const { name, category, unit, costPrice, sellingPrice, quantity } = req.body
 
-        const result = validate(name, category, unit, costPrice, sellingPrice, quantity, lang)
+        const result = validate(name, category, unit, costPrice, sellingPrice, quantity)
         if(!result.success){
             return res.status(400).json(result)
         }
 
-        const translatedName = await getTranslations(name, lang)
-        const translatedCategory = await getTranslations(category, lang)
-        
-        let translatedUnit: { en: string, ta: string }
-
-        if(lang === 'ta'){
-            translatedUnit = {
-                en: taToEnUnitMap[unit] || unit,
-                ta: unit
-            }
-        } 
-        else{
-            translatedUnit = {
-                en: unit,
-                ta: enToTaUnitMap[unit] || unit
-            }
-        }
-
         const newProduct: IProductDocument = new ProductModel({
+            name: name,
             costPrice: costPrice,
             sellingPrice: sellingPrice,
             quantity: quantity,
-            translation: {
-                en: {
-                    name: translatedName.en,
-                    unit: translatedUnit.en,
-                    category: translatedCategory.en
-                },
-                ta: {
-                    name: translatedName.ta,
-                    unit: translatedUnit.ta,
-                    category: translatedCategory.ta
-                }
-            },
+            unit: unit,
+            category: category,
             priceHistory: [{
                 costPrice: costPrice,
                 sellingPrice: sellingPrice,
@@ -67,26 +38,20 @@ export const addProductController = async(req: Request, res: Response) =>{
 
 export const getAllProductController = async(req: Request, res: Response) =>{
     try{
-        const lang = (req.query.lang as 'en' | 'ta') || 'ta'
-
-        if(!['en', 'ta'].includes(lang)){
-            return res.status(400).json({success: false, error: 'Invalid or missing language query'})
-        }
-
         const products = await ProductModel.aggregate([
             {
                 $project: {
                     _id: 1,
+                    name: 1,
                     costPrice: 1,
                     sellingPrice: 1,
                     quantity: 1,
+                    unit: 1,
+                    category: 1,
                     date: 1,
                     priceHistory: 1,
                     createdAt: 1,
-                    updatedAt: 1,
-                    name: `$translation.${lang}.name`,
-                    unit: `$translation.${lang}.unit`,
-                    category: `$translation.${lang}.category`,
+                    updatedAt: 1
                 }
             }
         ])
@@ -102,30 +67,26 @@ export const getAllProductController = async(req: Request, res: Response) =>{
 export const getEachProductController = async(req: Request, res: Response) =>{
     try{
         const { id } = req.params
-        const lang = (req.query.lang as 'en' | 'ta') || 'ta'
 
         if(!id){
             return res.status(400).json({success: false, error: 'Missing product ID'})
         } 
-        if(!['en', 'ta'].includes(lang)){
-            return res.status(400).json({success: false, error: 'Invalid or missing language query'})
-        }
 
         const product = await ProductModel.aggregate([
             { $match: { _id: new mongoose.Types.ObjectId(id) } },
             {
                 $project: {
                     _id: 1,
+                    name: 1,
                     costPrice: 1,
                     sellingPrice: 1,
                     quantity: 1,
                     date: 1,
+                    unit: 1,
+                    category: 1,
                     priceHistory: 1,
                     createdAt: 1,
-                    updatedAt: 1,
-                    name: `$translation.${lang}.name`,
-                    unit: `$translation.${lang}.unit`,
-                    category: `$translation.${lang}.category`,
+                    updatedAt: 1
                 }
             }
         ])
@@ -145,13 +106,13 @@ export const getEachProductController = async(req: Request, res: Response) =>{
 export const editProductController = async(req: Request, res: Response) =>{
     try{
         const { id } = req.params
-        const { name, category, unit, costPrice, sellingPrice, quantity, lang } = req.body
+        const { name, category, unit, costPrice, sellingPrice, quantity } = req.body
 
         if(!id){
             return res.status(400).json({success: false, error: 'Missing product ID'})
         }
 
-        const result = validate(name, category, unit, costPrice, sellingPrice, quantity, lang)
+        const result = validate(name, category, unit, costPrice, sellingPrice, quantity)
         if(!result.success){
             return res.status(400).json(result)
         }
@@ -161,44 +122,16 @@ export const editProductController = async(req: Request, res: Response) =>{
             return res.status(404).json({success: false, error: 'Product not found'})
         }
 
-        const translatedName = await getTranslations(name, lang)
-        const translatedCategory = await getTranslations(category, lang)
-        
-        let translatedUnit: { en: string, ta: string }
-        if(lang === 'ta'){
-            translatedUnit = {
-                en: taToEnUnitMap[unit] || unit,
-                ta: unit
-            }
-        } 
-        else{
-            translatedUnit = {
-                en: unit,
-                ta: enToTaUnitMap[unit] || unit
-            }
-        }
-
-        const translationUpdate = {
-            en: {
-                name: translatedName.en,
-                unit: translatedUnit.en,
-                category: translatedCategory.en
-            },
-            ta: {
-                name: translatedName.ta,
-                unit: translatedUnit.ta,
-                category: translatedCategory.ta
-            }
-        }
-
         const costChanged = existingProduct.costPrice.toString() !== costPrice.toString()
         const sellingChanged = existingProduct.sellingPrice.toString() !== sellingPrice.toString()
 
         const updateFields: any = {
+            name: name,
             costPrice: costPrice,
             sellingPrice: sellingPrice,
             quantity: quantity,
-            translation: translationUpdate
+            unit: unit,
+            category: category,
         }
 
         const updateOps: any = {
@@ -220,7 +153,7 @@ export const editProductController = async(req: Request, res: Response) =>{
             runValidators: true
         })
 
-        return res.status(200).json({success: true, message: 'Product updated successfully', product: updatedProduct})
+        return res.status(200).json({success: true, message: 'Product updated successfully', updatedProduct: updatedProduct})
     }
     catch(err: any){
         console.log(`Error in Edit Product Controller - ${err.message}`)

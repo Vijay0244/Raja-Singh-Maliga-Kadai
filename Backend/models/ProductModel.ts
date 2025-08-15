@@ -1,7 +1,11 @@
-import { IProduct, IProductDocument } from "../types/indes"
+import { IProductDocument } from "../types/index"
 import mongoose from "mongoose";
 
-const ProductSchema = new mongoose.Schema<IProductDocument>({
+const ProductSchema = new mongoose.Schema<IProductDocument>({        
+    name: {
+        type: String,
+        required: true
+    },
     costPrice: {
         type: mongoose.Schema.Types.Decimal128,
         required: true
@@ -19,38 +23,15 @@ const ProductSchema = new mongoose.Schema<IProductDocument>({
         type: Number,
         required: true
     },
-    translation: {
-        en: {
-            name: {
-                type: String,
-                required: true
-            },
-            unit: {
-                type: String,
-                required: true,
-                enum: ['g', 'kg', 'l', 'ml']
-            },
-            category: {
-                type: String,
-                required: true
-            }
-        },
-        ta: {
-            name: {
-                type: String,
-                required: true
-            },
-            unit: {
-                type: String,
-                required: true,
-                enum: ['கிராம்', 'கிலோ', 'லிட்டர்', 'மில்லிலிட்டர்']
-            },
-            category: {
-                type: String,
-                required: true
-            }
-        }
+    unit: {
+        type: String,
+        required: true,
+        enum: ['கிராம்', 'கிலோ', 'லிட்டர்', 'மில்லிலிட்டர்']
     },
+    category: {
+        type: String,
+        required: true
+    },        
     priceHistory: [{
         costPrice: {
             type: mongoose.Schema.Types.Decimal128,
